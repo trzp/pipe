@@ -5,7 +5,7 @@
 # Contact: mrtang@nudt.edu.cn
 # Github: trzp
 # Last Modified by:   mr tang
-# Last Modified time: 2018-10-27 20:46:18
+# Last Modified time: 2018-10-29 16:36:06
 
 # named pipe Server
 # encoding: utf-8
@@ -55,7 +55,7 @@ class WinNamedPipeServer:
         except:
             return 0
 
-    def write(self, buf):
+    def put(self, buf):
         win32file.WriteFile(self.pipe, buf)
 
 
@@ -76,7 +76,7 @@ class WinNamedPipeClient:
         win32pipe.SetNamedPipeHandleState(
             self.handle, win32pipe.PIPE_READMODE_MESSAGE, None, None)
 
-    def read(self):
+    def get(self):
         return win32file.ReadFile(self.handle, 64*1024)[1]
 
 class hWinNamedPipeServer:
@@ -103,7 +103,7 @@ class hWinNamedPipeServer:
         '''
         if self.ok:
             try:
-                self.__pipe.write(buf)
+                self.__pipe.put(buf)
                 return 1
             except:
                 self.ok = False
@@ -138,7 +138,7 @@ class hWinNamedPipeClient:
     def __tconnect(self):
         thread.start_new_thread(self.__connect,())
 
-    def read(self):
+    def get(self):
         if self.ok:
             try:
                 buf = win32file.ReadFile(self.handle, 64*1024)[1]
